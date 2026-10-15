@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { db } from "../db";
-import { destroyImage } from "../cloudinary";
-import { config } from "../config";
+import { db } from "../db.js";
+import { destroyImage } from "../cloudinary.js";
+import { config } from "../config.js";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 

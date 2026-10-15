@@ -1,8 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
-import { config, isCloudinaryConfigured } from "../config";
-import { uploadImage } from "../cloudinary";
-import { db } from "../db";
+import { config, isCloudinaryConfigured } from "../config.js";
+import { uploadImage } from "../cloudinary.js";
+import { db } from "../db.js";
 
 export const uploadsRouter = Router();
 

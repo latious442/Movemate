@@ -1,4 +1,4 @@
-import { loadServerEnv } from "./loadEnv";
+import { loadServerEnv } from "./loadEnv.js";
 import path from "node:path";
 
 loadServerEnv();

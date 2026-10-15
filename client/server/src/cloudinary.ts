@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { config, isCloudinaryConfigured } from "./config";
+import { config, isCloudinaryConfigured } from "./config.js";
 
 let configured = false;
 

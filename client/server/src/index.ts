@@ -1,5 +1,5 @@
-import { app } from "./app";
-import { config, isCloudinaryConfigured } from "./config";
+import { app } from "./app.js";
+import { config, isCloudinaryConfigured } from "./config.js";
 
 app.listen(config.port, () => {
   console.log(`MoveMate API listening on http://localhost:${config.port}`);

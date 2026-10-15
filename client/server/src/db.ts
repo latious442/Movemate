@@ -1,8 +1,8 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { config } from "./config";
-import { fetchRawJson, uploadRawJson } from "./cloudinary";
-import { hashPassword, verifyPassword } from "./password";
+import { config } from "./config.js";
+import { fetchRawJson, uploadRawJson } from "./cloudinary.js";
+import { hashPassword, verifyPassword } from "./password.js";
 
 export interface Item {
   id: string;

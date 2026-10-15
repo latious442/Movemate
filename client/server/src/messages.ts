@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { config } from "./config";
-import { fetchRawJson, uploadRawJson } from "./cloudinary";
+import { config } from "./config.js";
+import { fetchRawJson, uploadRawJson } from "./cloudinary.js";
 
 export interface ChatMessage {
   id: string;

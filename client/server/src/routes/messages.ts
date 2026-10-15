@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { db } from "../db";
-import { messages } from "../messages";
+import { db } from "../db.js";
+import { messages } from "../messages.js";
 
 export const messagesRouter = Router();
 
