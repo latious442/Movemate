@@ -89,12 +89,32 @@ export async function uploadRawJson(
 
 export async function fetchRawJson<T>(publicId: string): Promise<T | null> {
   const cl = client();
-  const url = cl.utils.url(publicId, {
-    resource_type: "raw",
-    type: "upload",
-    secure: true,
-  });
-  const res = await fetch(`${url}?_=${Date.now()}`, { cache: "no-store" });
+  // Cloudinary's CDN caches raw assets by path and ignores query strings, so a
+  // plain delivery URL keeps serving a stale copy after an overwrite (which
+  // makes read-modify-write cycles lose data). Look up the current version via
+  // the Admin API and read the versioned URL, which changes on every upload.
+  let version: number | undefined;
+  let secureUrl: string | undefined;
+  try {
+    const resource = await cl.api.resource(publicId, {
+      resource_type: "raw",
+      type: "upload",
+    });
+    version = resource.version;
+    secureUrl = resource.secure_url;
+  } catch (error) {
+    if ((error as { http_code?: number }).http_code === 404) return null;
+    throw error;
+  }
+  const url =
+    secureUrl ??
+    cl.utils.url(publicId, {
+      resource_type: "raw",
+      type: "upload",
+      secure: true,
+      version,
+    });
+  const res = await fetch(url, { cache: "no-store" });
   if (res.status === 404) return null;
   if (!res.ok) {
     throw new Error(`Failed to read Cloudinary asset (${res.status})`);
