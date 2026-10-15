@@ -82,5 +82,21 @@
       "favoriteItemIds": []
     }
   ],
-  "sessions": []
+  "sessions": [
+    {
+      "token": "d6d68dee-f225-4848-8167-b6792e272c43",
+      "userId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "createdAt": "2026-10-15T15:20:24.716Z"
+    },
+    {
+      "token": "1ed7d178-c027-4e2d-96be-f920fd1b83d8",
+      "userId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "createdAt": "2026-10-15T15:32:43.557Z"
+    },
+    {
+      "token": "2fe9cbf9-fb6d-4110-8166-d47d444bb0aa",
+      "userId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "createdAt": "2026-10-15T15:33:55.721Z"
+    }
+  ]
 }

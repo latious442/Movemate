@@ -5,6 +5,10 @@ loadServerEnv();
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+const serverRoot = path.resolve(here, "..");
+const dataFile = process.env.DATA_FILE
+  ? path.resolve(serverRoot, process.env.DATA_FILE)
+  : path.resolve(serverRoot, "data", "db.json");
 
 export type StorageDriver = "file" | "cloudinary";
 
@@ -13,12 +17,8 @@ const storageDriver = (process.env.STORAGE_DRIVER ?? "file") as StorageDriver;
 export const config = {
   port: Number(process.env.PORT ?? 3001),
   storageDriver,
-  dataFile:
-    process.env.DATA_FILE ?? path.resolve(here, "..", "data", "db.json"),
-  messagesDataFile: path.resolve(
-    path.dirname(process.env.DATA_FILE ?? path.resolve(here, "..", "data", "db.json")),
-    "messages.json",
-  ),
+  dataFile,
+  messagesDataFile: path.resolve(path.dirname(dataFile), "messages.json"),
   corsOrigin: process.env.CORS_ORIGIN ?? "*",
   maxUploadBytes: Number(process.env.MAX_UPLOAD_BYTES ?? 8 * 1024 * 1024),
   cloudinary: {

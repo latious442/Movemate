@@ -1,3 +1,3 @@
-import { app } from "../server/src/app";
+import { app } from "../client/server/src/app";
 
 export default app;

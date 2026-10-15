@@ -4,7 +4,7 @@ Fullstack starter for inventorying things you are moving. The stack is intention
 lightweight because **there is no free backend/database hosting right now**:
 
 - **Frontend:** React 19 + Vite + TypeScript (`client/`)
-- **Backend:** Express, deployed as serverless functions (`server/`, `api/`, `netlify/`)
+- **Backend:** Express in `client/server/`, deployed through root-level serverless functions
 - **Data:** a JSON store — a local file in development, or a Cloudinary raw asset in production
 - **Photos:** Cloudinary
 
@@ -18,19 +18,14 @@ movemate/
 ├── api/index.ts            # Vercel serverless entry (wraps the Express app)
 ├── netlify/functions/api.ts# Netlify serverless entry (wraps the Express app)
 ├── client/                 # React frontend (Vite)
-│   └── src/
-│       ├── api.ts          # fetch wrapper for the API
-│       ├── App.tsx         # page
-│       └── components/     # ItemForm, ItemCard
-├── server/                 # Express app (shared by local dev + both serverless hosts)
 │   ├── src/
-│   │   ├── app.ts          # Express routes wiring
-│   │   ├── db.ts           # JSON store (file driver / Cloudinary driver)
-│   │   ├── cloudinary.ts   # image + raw-JSON helpers
-│   │   ├── config.ts       # env config
-│   │   ├── index.ts        # local dev server
-│   │   └── routes/         # items.ts, messages.ts, uploads.ts
-│   └── data/               # db.json + messages.json (file storage)
+│   │   ├── api.ts          # fetch wrapper for the API
+│   │   ├── App.tsx         # page
+│   │   └── components/     # ItemForm, ItemCard
+│   ├── server/              # Express app (local dev + both serverless hosts)
+│   │   ├── src/
+│   │   └── data/            # db.json + messages.json (file storage)
+│   └── package.json         # Client workspace
 ├── vercel.json
 └── netlify.toml
 ```
@@ -42,7 +37,7 @@ movemate/
 npm install
 
 # 2. create env files
-cp server/.env.example server/.env      # fill in Cloudinary keys to test photo upload
+cp client/server/.env.example client/server/.env # add Cloudinary keys to test photo upload
 cp client/.env.example client/.env      # leave VITE_API_URL empty for local dev
 
 # 3. run frontend + backend together
@@ -52,7 +47,7 @@ npm run dev
 - Frontend: http://localhost:5173
 - API: http://localhost:3001 (Vite proxies `/api` → `http://localhost:3001`)
 
-In development the default `STORAGE_DRIVER=file` writes to `server/data/db.json`, so
+In development the default `STORAGE_DRIVER=file` writes to `client/server/data/db.json`, so
 data persists across restarts with no setup. Photo upload returns a `503` until you add
 Cloudinary credentials.
 
@@ -60,7 +55,7 @@ Cloudinary credentials.
 
 1. Create a free account at https://cloudinary.com
 2. Copy **Cloud name**, **API Key** and **API Secret** from the dashboard
-3. Put them in `server/.env`:
+3. Put them in `client/server/.env`:
 
 ```env
 CLOUDINARY_CLOUD_NAME=your-cloud
@@ -112,7 +107,7 @@ selects how the JSON store behaves:
 
 | Driver        | Where data lives                  | Use for                                   |
 | ------------- | --------------------------------- | ----------------------------------------- |
-| `file`        | `server/data/db.json` and `server/data/messages.json` | Local dev, or any host with a real disk |
+| `file`        | `client/server/data/db.json` and `client/server/data/messages.json` | Local dev, or any host with a real disk |
 | `cloudinary`  | raw `db.json` and `messages.json` assets on Cloudinary | **Production on Vercel/Netlify** |
 
 For production, set `STORAGE_DRIVER=cloudinary` (you already have Cloudinary for photos).
@@ -154,7 +149,7 @@ The same code works on Netlify via `netlify/functions/api.ts` (powered by `serve
 | `VITE_API_URL`           | client         | Leave empty to use same origin + dev proxy       |
 | `PORT`                   | server         | Local API port (default `3001`)                  |
 | `STORAGE_DRIVER`         | server         | `file` (default) or `cloudinary`                 |
-| `DATA_FILE`              | server         | Optional custom path for the file driver         |
+| `DATA_FILE`              | client/server  | Optional path relative to `client/server/`       |
 | `CORS_ORIGIN`            | server         | Default `*`; set to your frontend URL in prod    |
 | `CLOUDINARY_*`           | server         | Cloudinary cloud name / key / secret / folder    |
 | `MAX_UPLOAD_BYTES`       | server         | Upload size limit (default 8 MB)                 |

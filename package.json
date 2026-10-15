@@ -5,17 +5,17 @@
   "type": "module",
   "workspaces": [
     "client",
-    "server"
+    "client/server"
   ],
   "scripts": {
-    "setup": "cp -n server/.env.example server/.env 2>/dev/null || true; cp -n client/.env.example client/.env 2>/dev/null || true",
+    "setup": "cp -n client/server/.env.example client/server/.env 2>/dev/null || true; cp -n client/.env.example client/.env 2>/dev/null || true",
     "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "npm run dev -w server",
-    "dev:client": "npm run dev -w client",
-    "build": "npm run build -w client",
-    "typecheck": "npm run typecheck -w server && npm run build -w client",
-    "start": "npm run start -w server",
-    "lint": "npm run lint -w client"
+    "dev:server": "npm --prefix client/server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "typecheck": "npm --prefix client/server run typecheck && npm --prefix client run build",
+    "start": "npm --prefix client/server run start",
+    "lint": "npm --prefix client run lint"
   },
   "devDependencies": {
     "concurrently": "^10.0.6"

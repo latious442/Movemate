@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { db } from "../db";
 import { destroyImage } from "../cloudinary";
+import { config } from "../config";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
@@ -173,7 +174,7 @@ itemsRouter.post("/items", async (req, res, next) => {
     const created = await db.createItem({ ...parsed.value, ownerId });
     // Persist sell post data to a separate JSON file for archival or external processing
     try {
-      const postsDir = path.resolve(process.cwd(), "data", "posts");
+      const postsDir = path.resolve(path.dirname(config.dataFile), "posts");
       await fs.mkdir(postsDir, { recursive: true });
       const filePath = path.join(postsDir, `${created.id}.json`);
       await fs.writeFile(filePath, JSON.stringify(created, null, 2), "utf8");

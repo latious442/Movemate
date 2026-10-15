@@ -984,6 +984,38 @@ textarea:focus {
   align-items: flex-start;
 }
 
+.item-card__seller-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  min-width: 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border);
+}
+
+.item-card__seller {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.item-card__seller-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.item-card__seller-label {
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.025em;
+}
+
 .item-card__meta-text {
   min-width: 0;
   color: var(--muted);
@@ -1005,49 +1037,34 @@ textarea:focus {
   border-radius: 50%;
   background: #e8f5ef;
   color: var(--accent);
+  transition: background 0.15s, color 0.15s, transform 0.15s;
 }
 
 .item-card__msg-btn:hover {
   background: var(--accent);
   color: #fff;
-}
-
-.item-card__owner {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  text-decoration: none;
-  color: var(--text);
-  font-size: 0.82rem;
-  font-weight: 600;
-  min-width: 0;
-  padding: 0.15rem 0.35rem 0.15rem 0;
-  margin: 0;
-  border-radius: 999px;
-  transition: background 0.15s, color 0.15s;
-  cursor: pointer;
-}
-
-.item-card__owner:hover {
-  background: rgba(13, 122, 79, 0.08);
-  color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .item-card__owner-avatar {
   display: grid;
   place-items: center;
-  width: 1.55rem;
-  height: 1.55rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 999px;
   background: rgba(13, 122, 79, 0.12);
   color: var(--accent);
   font-weight: 800;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   flex-shrink: 0;
 }
 
 .item-card__owner-name {
   min-width: 0;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

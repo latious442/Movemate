@@ -7,7 +7,7 @@ const serverRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), ".
 
 /**
  * Load env from the server package directory (not process.cwd()), so variables
- * work when the API is started from the monorepo root via npm workspaces.
+ * work when the API is started from either the repository root or this package.
  */
 export function loadServerEnv(): void {
   const examplePath = path.join(serverRoot, ".env.example");

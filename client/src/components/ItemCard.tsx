@@ -88,20 +88,35 @@ export function ItemCard({ item }: ItemCardProps) {
           <span className="item-card__meta-text">
             {[item.university || 'Campus', item.condition || 'Gently Used'].filter(Boolean).join(' · ')}
           </span>
-          {item.ownerName && item.ownerId && item.ownerId !== user?.id && (
-            <button
-              type="button"
-              className="item-card__msg-btn"
-              onClick={handleOwnerClick}
-              title={`Message ${item.ownerName}`}
-              aria-label={`Message ${item.ownerName}`}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-              </svg>
-            </button>
-          )}
         </div>
+        {item.ownerName && (
+          <div className="item-card__seller-row">
+            <div className="item-card__seller">
+              <span className="item-card__owner-avatar" aria-hidden="true">
+                {item.ownerName.trim().charAt(0).toUpperCase()}
+              </span>
+              <span className="item-card__seller-copy">
+                <span className="item-card__seller-label">Listed by</span>
+                <span className="item-card__owner-name" title={item.ownerName}>
+                  {item.ownerName}
+                </span>
+              </span>
+            </div>
+            {item.ownerId && item.ownerId !== user?.id && (
+              <button
+                type="button"
+                className="item-card__msg-btn"
+                onClick={handleOwnerClick}
+                title={`Message ${item.ownerName}`}
+                aria-label={`Message ${item.ownerName}`}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </article>
   )
