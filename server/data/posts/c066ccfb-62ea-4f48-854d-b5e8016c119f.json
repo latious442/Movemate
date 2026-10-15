@@ -1,0 +1,17 @@
+{
+  "name": "fav book",
+  "category": "Furniture",
+  "quantity": 1,
+  "notes": "the romance between hatred and pride",
+  "price": 22,
+  "condition": "New",
+  "university": "Stanford University",
+  "campusPickup": true,
+  "localDelivery": false,
+  "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792070240/movemate/khx2tjzjrc2gltjnayjk.jpg",
+  "photoPublicId": "movemate/khx2tjzjrc2gltjnayjk",
+  "ownerId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
+  "id": "c066ccfb-62ea-4f48-854d-b5e8016c119f",
+  "createdAt": "2026-10-15T13:17:21.813Z",
+  "updatedAt": "2026-10-15T13:17:21.813Z"
+}

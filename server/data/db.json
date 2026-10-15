@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "name": "xorizo",
+      "category": "Furniture",
+      "quantity": 1,
+      "notes": "",
+      "price": 25,
+      "condition": "New",
+      "university": "Stanford University",
+      "campusPickup": true,
+      "localDelivery": false,
+      "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792061131/movemate/i60pr6dci7dqfunzpqu0.jpg",
+      "photoPublicId": "movemate/i60pr6dci7dqfunzpqu0",
+      "ownerId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "id": "f8fadc73-360c-4eb1-ad3f-d8522dd3d614",
+      "createdAt": "2026-10-15T10:45:32.763Z",
+      "updatedAt": "2026-10-15T10:45:32.763Z"
+    },
+    {
+      "name": "fav book",
+      "category": "Furniture",
+      "quantity": 1,
+      "notes": "the romance between hatred and pride",
+      "price": 22,
+      "condition": "New",
+      "university": "Stanford University",
+      "campusPickup": true,
+      "localDelivery": false,
+      "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792070240/movemate/khx2tjzjrc2gltjnayjk.jpg",
+      "photoPublicId": "movemate/khx2tjzjrc2gltjnayjk",
+      "ownerId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
+      "id": "c066ccfb-62ea-4f48-854d-b5e8016c119f",
+      "createdAt": "2026-10-15T13:17:21.813Z",
+      "updatedAt": "2026-10-15T13:17:21.813Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "name": "Myo Myat Aung",
+      "email": "myomyataung1211@gmail.com",
+      "passwordHash": "251685958c3fc49ef30c92e67d6444cc:048539465d309c00f547318fb361b5949a0939758e3721c81f91c16fb88aaa0d3d28db222a0dfb2211c46849f5008c7edf8b94ae8988ac3c092b0977ef9107f8",
+      "createdAt": "2026-10-15T09:42:22.466Z",
+      "favoriteItemIds": []
+    },
+    {
+      "id": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
+      "name": "Latious",
+      "email": "latious@gmail.com",
+      "passwordHash": "afbf386173dd90da0f23ac2c73c9ff9a:34ce92799205ea9634cfe84cf00365191d34389c79a1be0aa9380d0c8621ed604f6127cedae2ea7bfdc3fe830823555aca0b168b5a400b0083ca379e522627ee",
+      "createdAt": "2026-10-15T10:42:29.380Z",
+      "favoriteItemIds": []
+    }
+  ],
+  "sessions": [
+    {
+      "token": "05414141-edd1-436d-aa8c-5f461a4b038d",
+      "userId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
+      "createdAt": "2026-10-15T13:16:20.127Z"
+    }
+  ]
+}

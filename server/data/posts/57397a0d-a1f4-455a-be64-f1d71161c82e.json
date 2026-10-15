@@ -1,0 +1,16 @@
+{
+  "name": "xorizo",
+  "category": "Furniture",
+  "quantity": 1,
+  "notes": "just to know mentioned a few",
+  "price": 50,
+  "condition": "New",
+  "university": "Stanford University",
+  "campusPickup": true,
+  "localDelivery": false,
+  "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792060423/movemate/wg1v69twlkeh81wpqnpi.jpg",
+  "photoPublicId": "movemate/wg1v69twlkeh81wpqnpi",
+  "id": "57397a0d-a1f4-455a-be64-f1d71161c82e",
+  "createdAt": "2026-10-15T10:33:45.234Z",
+  "updatedAt": "2026-10-15T10:33:45.234Z"
+}
