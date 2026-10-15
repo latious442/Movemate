@@ -29,8 +29,8 @@ movemate/
 │   │   ├── cloudinary.ts   # image + raw-JSON helpers
 │   │   ├── config.ts       # env config
 │   │   ├── index.ts        # local dev server
-│   │   └── routes/         # items.ts, uploads.ts
-│   └── data/db.json        # the "database" (used with STORAGE_DRIVER=file)
+│   │   └── routes/         # items.ts, messages.ts, uploads.ts
+│   └── data/               # db.json + messages.json (file storage)
 ├── vercel.json
 └── netlify.toml
 ```
@@ -74,6 +74,10 @@ Open http://localhost:5173 and add an item (name, category, quantity, notes, pho
 The photo is uploaded to Cloudinary first, then the item (with the returned URL) is stored
 in the JSON store.
 
+Signed-in users can message listing owners. Messages are stored separately with a timestamp,
+text, sender ID, and receiver ID. The inbox refreshes periodically to show messages from
+other clients without requiring a page reload.
+
 ### API
 
 | Method | Path              | Description                          |
@@ -85,6 +89,9 @@ in the JSON store.
 | PATCH  | `/api/items/:id`  | Update item                          |
 | DELETE | `/api/items/:id`  | Delete item (also removes the photo) |
 | POST   | `/api/uploads`    | Upload an image (`multipart/form-data`, field `file`) |
+| GET    | `/api/messages`   | List the signed-in user's conversations |
+| GET    | `/api/messages/:userId` | Get a conversation with another user |
+| POST   | `/api/messages`   | Send a message (`receiverId`, `text`) |
 
 ## Scripts
 
@@ -105,14 +112,14 @@ selects how the JSON store behaves:
 
 | Driver        | Where data lives                  | Use for                                   |
 | ------------- | --------------------------------- | ----------------------------------------- |
-| `file`        | `server/data/db.json`             | Local dev, or any host with a real disk   |
-| `cloudinary`  | a raw `db.json` asset on Cloudinary | **Production on Vercel/Netlify**        |
+| `file`        | `server/data/db.json` and `server/data/messages.json` | Local dev, or any host with a real disk |
+| `cloudinary`  | raw `db.json` and `messages.json` assets on Cloudinary | **Production on Vercel/Netlify** |
 
 For production, set `STORAGE_DRIVER=cloudinary` (you already have Cloudinary for photos).
-The whole JSON document is written to `movemate/db.json` as a **raw** Cloudinary asset and
-read back on each request. Writes are serialized in-process to reduce lost updates; for a
-small app this is plenty. If you outgrow it, swap `server/src/db.ts` for a real database —
-the rest of the app is unaffected.
+The application data is written to `movemate/db.json` and `movemate/messages.json` as
+**raw** Cloudinary assets and read back on each request. Writes are serialized in-process to
+reduce lost updates; for a small app this is plenty. If you outgrow it, swap the JSON stores
+for a real database — the rest of the app is unaffected.
 
 ## Deploy to Vercel
 

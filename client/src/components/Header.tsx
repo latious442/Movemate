@@ -51,6 +51,41 @@ export function Header() {
         >
           <HeartIcon />
         </Link>
+        <nav className="site-header__quick-nav" aria-label="Quick links">
+          <NavLink
+            to="/browse"
+            className={({ isActive }) =>
+              `site-header__quick-link${isActive ? ' site-header__quick-link--active' : ''}`
+            }
+            aria-label="Browse listings"
+            title="Browse"
+            onClick={() => setMenuOpen(false)}
+          >
+            <BrowseIcon />
+          </NavLink>
+          <NavLink
+            to="/sell"
+            className={({ isActive }) =>
+              `site-header__quick-link${isActive ? ' site-header__quick-link--active' : ''}`
+            }
+            aria-label="Sell an item"
+            title="Sell"
+            onClick={() => setMenuOpen(false)}
+          >
+            <SellIcon />
+          </NavLink>
+          <NavLink
+            to="/messages"
+            className={({ isActive }) =>
+              `site-header__quick-link${isActive ? ' site-header__quick-link--active' : ''}`
+            }
+            aria-label="Messages"
+            title="Messages"
+            onClick={() => setMenuOpen(false)}
+          >
+            <MessagesIcon />
+          </NavLink>
+        </nav>
         <Link to={profileTo} className="site-header__profile" onClick={() => setMenuOpen(false)}>
           {profileLabel}
         </Link>
@@ -66,6 +101,54 @@ export function Header() {
         <MenuIcon isOpen={menuOpen} />
       </button>
     </header>
+  )
+}
+
+function BrowseIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M3 10h2l1-3.5A2 2 0 018 5h2a2 2 0 012 2v1h0V7a2 2 0 012-2h2a2 2 0 012 1.5L19 10h2M3 10l1 5a2 2 0 002 1.5h3a2 2 0 002-2V11h2v3.5a2 2 0 002 2h3a2 2 0 002-1.5l1-5M3 10h18"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function SellIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="m14.5 5.5 4 4M4 20l4.2-.9L19.4 7.9a2.1 2.1 0 00-3-3L5.2 16.1 4 20z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function MessagesIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M3 6.5A2.5 2.5 0 015.5 4h13A2.5 2.5 0 0121 6.5v11a2.5 2.5 0 01-2.5 2.5h-13A2.5 2.5 0 013 17.5v-11z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path
+        d="m4 6 8 6 8-6"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 

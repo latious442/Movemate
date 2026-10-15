@@ -1,10 +1,4 @@
-const UNIVERSITIES = [
-  'Stanford University',
-  'UC Berkeley',
-  'UCLA',
-  'MIT',
-  'Harvard University',
-]
+import { UNIVERSITIES } from '../catalog'
 
 type HeroProps = {
   searchQuery: string
@@ -58,6 +52,7 @@ export function Hero({
         <label className="hero__search-university">
           <span className="sr-only">University</span>
           <select value={university} onChange={(e) => onUniversityChange(e.target.value)}>
+            <option value="">All universities</option>
             {UNIVERSITIES.map((name) => (
               <option key={name} value={name}>
                 {name}

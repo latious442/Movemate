@@ -4,6 +4,7 @@ import { config, isCloudinaryConfigured } from "./config";
 import { authRouter } from "./routes/auth";
 import { itemsRouter } from "./routes/items";
 import { uploadsRouter } from "./routes/uploads";
+import { messagesRouter } from "./routes/messages";
 
 export function createApp() {
   const app = express();
@@ -21,6 +22,7 @@ export function createApp() {
 
   app.use("/api", authRouter);
   app.use("/api", itemsRouter);
+  app.use("/api", messagesRouter);
   app.use("/api", uploadsRouter);
 
   app.use((_req, res) => {

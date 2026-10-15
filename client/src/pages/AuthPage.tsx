@@ -45,7 +45,7 @@ export function AuthPage() {
         <p className="muted">
           {mode === 'login'
             ? 'Sign in to manage your MoveMate profile.'
-            : 'Join MoveMate — your account is saved in the server JSON store.'}
+            : 'Join MoveMate and connect with your campus community.'}
         </p>
       </header>
 
@@ -121,9 +121,6 @@ export function AuthPage() {
           </button>
         </form>
 
-        <p className="auth-card__hint muted">
-          Accounts are stored in <code>server/data/db.json</code> when running locally.
-        </p>
       </div>
 
       <p className="auth-back">

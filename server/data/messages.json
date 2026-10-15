@@ -1,0 +1,81 @@
+{
+  "messages": [
+    {
+      "id": "5104af5e-3d3b-44aa-8aca-fa36f6cb77d1",
+      "sentAt": "2026-10-15T13:48:15.754Z",
+      "text": "hi buddy",
+      "senderId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
+      "receiverId": "a89c702f-63ed-4682-89d1-a4d6f48988b1"
+    },
+    {
+      "id": "ff2fc0c0-76a1-4718-972f-5b5261c2fe3b",
+      "sentAt": "2026-10-15T13:48:50.071Z",
+      "text": "oops",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "373b5ef1-0ad3-4cfe-9a59-0cd87afcb35c",
+      "sentAt": "2026-10-15T13:55:56.353Z",
+      "text": "I can pay by Cash on Pickup.",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "844e4aac-4072-430f-a5d4-d059f36ba3c6",
+      "sentAt": "2026-10-15T13:59:29.468Z",
+      "text": "hi",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "25e33820-a35a-4352-ae78-64225703277a",
+      "sentAt": "2026-10-15T13:59:31.301Z",
+      "text": "I can pay by Bank Transfer.",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "e72daa91-fdd8-4682-af76-9306befcce2e",
+      "sentAt": "2026-10-15T13:59:44.700Z",
+      "text": "I can pay by Cash on Pickup.",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "9292022b-518e-4071-b8b9-ffdf9f0faa0d",
+      "sentAt": "2026-10-15T13:59:52.436Z",
+      "text": "hiiiii",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "5978b2e8-6a07-49ca-9afd-260a680d2cdf",
+      "sentAt": "2026-10-15T14:16:41.466Z",
+      "text": "hiiii",
+      "senderId": "d1a8ac03-4759-48c7-bfc3-f941e2222906",
+      "receiverId": "a89c702f-63ed-4682-89d1-a4d6f48988b1"
+    },
+    {
+      "id": "f9e02cff-7300-4fc7-a486-b24fcc1a9fea",
+      "sentAt": "2026-10-15T14:16:47.198Z",
+      "text": "I can pay by Bank Transfer.",
+      "senderId": "d1a8ac03-4759-48c7-bfc3-f941e2222906",
+      "receiverId": "a89c702f-63ed-4682-89d1-a4d6f48988b1"
+    },
+    {
+      "id": "0ee1027b-6382-413e-b439-07f9c62cde04",
+      "sentAt": "2026-10-15T15:02:46.821Z",
+      "text": "hi",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    },
+    {
+      "id": "fda371a9-bc83-43f8-b6fb-1a4208424cbf",
+      "sentAt": "2026-10-15T15:02:49.185Z",
+      "text": "I can pay by Online Payment.",
+      "senderId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "receiverId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230"
+    }
+  ]
+}

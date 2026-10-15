@@ -1,11 +1,11 @@
 const categories = [
-  { id: 'furniture', label: 'Furniture', Icon: IconFurniture },
-  { id: 'electronics', label: 'Electronics', Icon: IconElectronics },
-  { id: 'appliances', label: 'Appliances', Icon: IconAppliances },
-  { id: 'bedroom', label: 'Bedroom', Icon: IconBedroom },
-  { id: 'kitchen', label: 'Kitchen', Icon: IconKitchen },
-  { id: 'study', label: 'Study Essentials', Icon: IconStudy },
-  { id: 'free', label: 'Free Items', Icon: IconGift },
+  { value: 'Furniture', label: 'Furniture', Icon: IconFurniture },
+  { value: 'Electronics', label: 'Electronics', Icon: IconElectronics },
+  { value: 'Appliances', label: 'Appliances', Icon: IconAppliances },
+  { value: 'Bedroom', label: 'Bedroom', Icon: IconBedroom },
+  { value: 'Kitchen', label: 'Kitchen', Icon: IconKitchen },
+  { value: 'Study Essentials', label: 'Study Essentials', Icon: IconStudy },
+  { value: 'Free Items', label: 'Free Items', Icon: IconGift },
 ] as const
 
 type CategoryGridProps = {
@@ -16,12 +16,12 @@ export function CategoryGrid({ onSelectCategory }: CategoryGridProps) {
   return (
     <section className="categories" aria-label="Browse by category">
       <div className="categories__grid">
-        {categories.map(({ id, label, Icon }) => (
+        {categories.map(({ value, label, Icon }) => (
           <button
-            key={id}
+            key={value}
             type="button"
             className="category-card"
-            onClick={() => onSelectCategory(id === 'study' ? 'Study' : capitalize(id))}
+            onClick={() => onSelectCategory(value)}
           >
             <Icon />
             <span>{label}</span>
@@ -30,10 +30,6 @@ export function CategoryGrid({ onSelectCategory }: CategoryGridProps) {
       </div>
     </section>
   )
-}
-
-function capitalize(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
 function IconFurniture() {

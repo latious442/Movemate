@@ -3,7 +3,26 @@ import { getAuthToken } from './auth/sessionStorage'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
-export type AuthUser = { name: string; email: string }
+export type AuthUser = { id: string; name: string; email: string }
+
+export interface ChatMessage {
+  id: string
+  sentAt: string
+  text: string
+  senderId: string
+  receiverId: string
+}
+
+export interface Conversation {
+  userId: string
+  name: string
+  latestMessage: ChatMessage
+}
+
+export interface MessageThread {
+  participant: { id: string; name: string }
+  messages: ChatMessage[]
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers)
@@ -39,6 +58,21 @@ export const api = {
 
   removeFavorite: (itemId: string) =>
     request<void>(`/api/favorites/${encodeURIComponent(itemId)}`, { method: 'DELETE' }),
+
+  listConversations: () => request<Conversation[]>('/api/messages'),
+
+  getMessageThread: (userId: string) =>
+    request<MessageThread>(`/api/messages/${encodeURIComponent(userId)}`),
+
+  sendMessage: (receiverId: string, text: string) =>
+    request<ChatMessage>('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ receiverId, text }),
+    }),
+
+  deleteMessage: (messageId: string) =>
+    request<void>(`/api/messages/${encodeURIComponent(messageId)}`, { method: 'DELETE' }),
 
   createItem: (input: ItemInput) =>
     request<Item>('/api/items', {

@@ -2,6 +2,7 @@ import { api } from '../api'
 import { clearAuthToken, getAuthToken, setAuthToken } from './sessionStorage'
 
 export type DemoSession = {
+  id: string
   name: string
   email: string
 }

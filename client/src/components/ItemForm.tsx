@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { UNIVERSITIES } from '../catalog'
 import type { Item } from '../types'
 
 export interface NewItemValues {
@@ -33,14 +34,6 @@ const CATEGORIES = [
   'Move-out bundle',
 ]
 const CONDITIONS = ['New', 'Like new', 'Good', 'Fair']
-const UNIVERSITIES = [
-  'Stanford University',
-  'UC Berkeley',
-  'UCLA',
-  'MIT',
-  'Harvard University',
-]
-
 function empty(defaultUniversity: string): NewItemValues {
   return {
     name: '',

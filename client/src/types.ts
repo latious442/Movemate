@@ -13,6 +13,8 @@ export interface Item {
   localDelivery: boolean
   photoUrl: string | null
   photoPublicId: string | null
+  status?: 'Available' | 'Reserved' | 'Sold' | string
+  verifiedStudent?: boolean
   createdAt: string
   updatedAt: string
 }
@@ -29,6 +31,8 @@ export interface ItemInput {
   localDelivery?: boolean
   photoUrl?: string | null
   photoPublicId?: string | null
+  status?: 'Available' | 'Reserved' | 'Sold' | string
+  verifiedStudent?: boolean
 }
 
 export interface UploadedPhoto {

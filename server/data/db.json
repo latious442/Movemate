@@ -7,7 +7,7 @@
       "notes": "",
       "price": 25,
       "condition": "New",
-      "university": "Stanford University",
+      "university": "Rangsit University",
       "campusPickup": true,
       "localDelivery": false,
       "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792061131/movemate/i60pr6dci7dqfunzpqu0.jpg",
@@ -24,7 +24,7 @@
       "notes": "the romance between hatred and pride",
       "price": 22,
       "condition": "New",
-      "university": "Stanford University",
+      "university": "Bangkok University",
       "campusPickup": true,
       "localDelivery": false,
       "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792070240/movemate/khx2tjzjrc2gltjnayjk.jpg",
@@ -33,6 +33,23 @@
       "id": "c066ccfb-62ea-4f48-854d-b5e8016c119f",
       "createdAt": "2026-10-15T13:17:21.813Z",
       "updatedAt": "2026-10-15T13:17:21.813Z"
+    },
+    {
+      "name": "spider",
+      "category": "Bedroom",
+      "quantity": 1,
+      "notes": "hhhhhhh",
+      "price": 666,
+      "condition": "New",
+      "university": "PIM",
+      "campusPickup": true,
+      "localDelivery": false,
+      "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792076502/movemate/eeycedqdzpalccuh8ayq.jpg",
+      "photoPublicId": "movemate/eeycedqdzpalccuh8ayq",
+      "ownerId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "id": "82d77b4b-bae5-4b80-8f74-fe6415559d7c",
+      "createdAt": "2026-10-15T15:01:43.929Z",
+      "updatedAt": "2026-10-15T15:01:43.929Z"
     }
   ],
   "users": [
@@ -42,7 +59,9 @@
       "email": "myomyataung1211@gmail.com",
       "passwordHash": "251685958c3fc49ef30c92e67d6444cc:048539465d309c00f547318fb361b5949a0939758e3721c81f91c16fb88aaa0d3d28db222a0dfb2211c46849f5008c7edf8b94ae8988ac3c092b0977ef9107f8",
       "createdAt": "2026-10-15T09:42:22.466Z",
-      "favoriteItemIds": []
+      "favoriteItemIds": [
+        "c066ccfb-62ea-4f48-854d-b5e8016c119f"
+      ]
     },
     {
       "id": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
@@ -50,14 +69,18 @@
       "email": "latious@gmail.com",
       "passwordHash": "afbf386173dd90da0f23ac2c73c9ff9a:34ce92799205ea9634cfe84cf00365191d34389c79a1be0aa9380d0c8621ed604f6127cedae2ea7bfdc3fe830823555aca0b168b5a400b0083ca379e522627ee",
       "createdAt": "2026-10-15T10:42:29.380Z",
+      "favoriteItemIds": [
+        "f8fadc73-360c-4eb1-ad3f-d8522dd3d614"
+      ]
+    },
+    {
+      "id": "d1a8ac03-4759-48c7-bfc3-f941e2222906",
+      "name": "oak",
+      "email": "oak@gmail.com",
+      "passwordHash": "e4f9983713f018c2c2ade2f7af1f98ec:f4e1d6a2b81ad826cf6335de2f81a3f0ee2e3768a595e655b6ab8fec64233895cf3e76569848ed7298799c0771a3ee1a5e5c1c2da5dd9f56e79be08ac311113f",
+      "createdAt": "2026-10-15T14:16:08.356Z",
       "favoriteItemIds": []
     }
   ],
-  "sessions": [
-    {
-      "token": "05414141-edd1-436d-aa8c-5f461a4b038d",
-      "userId": "bb723437-13ad-43ed-8f8b-ae7bf9b30230",
-      "createdAt": "2026-10-15T13:16:20.127Z"
-    }
-  ]
+  "sessions": []
 }

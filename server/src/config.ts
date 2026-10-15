@@ -15,6 +15,10 @@ export const config = {
   storageDriver,
   dataFile:
     process.env.DATA_FILE ?? path.resolve(here, "..", "data", "db.json"),
+  messagesDataFile: path.resolve(
+    path.dirname(process.env.DATA_FILE ?? path.resolve(here, "..", "data", "db.json")),
+    "messages.json",
+  ),
   corsOrigin: process.env.CORS_ORIGIN ?? "*",
   maxUploadBytes: Number(process.env.MAX_UPLOAD_BYTES ?? 8 * 1024 * 1024),
   cloudinary: {

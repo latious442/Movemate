@@ -1,226 +1,286 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { api, type ChatMessage, type Conversation, type MessageThread } from '../api'
+import { useDemoAuth } from '../auth/useDemoAuth'
 
-type PaymentMethod = 'cash' | 'bank' | 'qr' | 'online'
+const PAYMENT_METHODS = ['Cash on Pickup', 'Bank Transfer', 'QR Payment', 'Online Payment']
 
-const THREAD = {
-  seller: 'Maya L.',
-  item: 'Wooden Desk Chair',
-  price: 45,
-  avatar:
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face',
-  itemPhoto:
-    'https://images.unsplash.com/photo-1506439773649-6e0eb73cfb3e?w=120&h=120&fit=crop',
+function formatTime(value: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(new Date(value))
 }
 
 export function MessagesPanel() {
-  const [searchParams] = useSearchParams()
-  const toUser = searchParams.get('to')
-  const sellerName = toUser || THREAD.seller
-  const [payment, setPayment] = useState<PaymentMethod>('cash')
-  const [draft, setDraft] = useState(toUser ? `Hi! I'm interested in your listing.` : '')
+  const { user } = useDemoAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const toUserId = searchParams.get('to')
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [thread, setThread] = useState<MessageThread | null>(null)
+  const [loadedThreadFor, setLoadedThreadFor] = useState<string | null>(null)
+  const [draft, setDraft] = useState('')
+  const [sending, setSending] = useState(false)
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(() => new Set())
+  const [error, setError] = useState<string | null>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let active = true
+    let loadingConversations = false
+
+    async function refreshConversations() {
+      if (loadingConversations) return
+      loadingConversations = true
+      try {
+        const result = await api.listConversations()
+        if (active) setConversations(result)
+      } catch (cause) {
+        if (active) setError(cause instanceof Error ? cause.message : 'Could not load conversations.')
+      } finally {
+        loadingConversations = false
+      }
+    }
+
+    void refreshConversations()
+    const interval = window.setInterval(() => void refreshConversations(), 5000)
+    return () => {
+      active = false
+      window.clearInterval(interval)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!toUserId) return
+    const participantId = toUserId
+
+    let active = true
+    let loadingThread = false
+
+    async function refreshThread() {
+      if (loadingThread) return
+      loadingThread = true
+      try {
+        const result = await api.getMessageThread(participantId)
+        if (active) {
+          setThread(result)
+          setLoadedThreadFor(participantId)
+          setError(null)
+        }
+      } catch (cause) {
+        if (active) {
+          setLoadedThreadFor(participantId)
+          setError(cause instanceof Error ? cause.message : 'Could not load this conversation.')
+        }
+      } finally {
+        loadingThread = false
+      }
+    }
+
+    void refreshThread()
+    const interval = window.setInterval(() => void refreshThread(), 2500)
+    return () => {
+      active = false
+      window.clearInterval(interval)
+    }
+  }, [toUserId])
+
+  useEffect(() => {
+    const body = bodyRef.current
+    if (body) body.scrollTop = body.scrollHeight
+  }, [thread?.messages.length, toUserId])
+
+  async function sendMessage(text: string, clearDraft = false) {
+    if (!toUserId || !text.trim() || sending) return
+    setSending(true)
+    setError(null)
+    try {
+      const sent = await api.sendMessage(toUserId, text.trim())
+      if (clearDraft) setDraft('')
+      setThread((current) => current?.participant.id === toUserId
+        ? {
+            ...current,
+            messages: current.messages.some((message) => message.id === sent.id)
+              ? current.messages
+              : [...current.messages, sent].sort((a, b) => a.sentAt.localeCompare(b.sentAt)),
+          }
+        : current)
+      const latest = await api.listConversations()
+      setConversations(latest)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Could not send your message.')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    void sendMessage(draft, true)
+  }
+
+  async function deleteMessage(message: ChatMessage) {
+    if (message.senderId !== user?.id || deletingIds.has(message.id)) return
+    setError(null)
+    setDeletingIds((current) => new Set(current).add(message.id))
+    try {
+      await api.deleteMessage(message.id)
+      setThread((current) => current?.participant.id === toUserId
+        ? { ...current, messages: current.messages.filter((entry) => entry.id !== message.id) }
+        : current)
+      setConversations(await api.listConversations())
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Could not delete this message.')
+    } finally {
+      setDeletingIds((current) => {
+        const next = new Set(current)
+        next.delete(message.id)
+        return next
+      })
+    }
+  }
+
+  const activeThread = thread?.participant.id === toUserId ? thread : null
+  const threadLoading = Boolean(toUserId && loadedThreadFor !== toUserId)
+  const participant = activeThread?.participant
+  const otherConversations = conversations.filter((conversation) => conversation.userId !== user?.id)
 
   return (
     <main className="messages-page">
       <div className="messages-layout card">
         <aside className="messages-sidebar">
           <h2 className="messages-sidebar__title">Messages</h2>
-          <button type="button" className="thread-preview thread-preview--active">
-            <img src={THREAD.itemPhoto} alt="" className="thread-preview__thumb" />
-            <div className="thread-preview__body">
-              <span className="thread-preview__name">{sellerName}</span>
-              <span className="thread-preview__item">{THREAD.item}</span>
-              <span className="thread-preview__snippet">Yes it is! Happy to answer any qu…</span>
-            </div>
-          </button>
+          {otherConversations.length === 0 ? (
+            <p className="messages-sidebar__empty">Your conversations will appear here.</p>
+          ) : (
+            otherConversations.map((conversation) => (
+              <button
+                key={conversation.userId}
+                type="button"
+                className={`thread-preview${toUserId === conversation.userId ? ' thread-preview--active' : ''}`}
+                onClick={() => setSearchParams({ to: conversation.userId })}
+              >
+                <span className="messages-chat__avatar-letter">
+                  {conversation.name.charAt(0).toUpperCase()}
+                </span>
+                <span className="thread-preview__body">
+                  <span className="thread-preview__name">{conversation.name}</span>
+                  <span className="thread-preview__snippet">
+                    {conversation.latestMessage.text}
+                  </span>
+                </span>
+              </button>
+            ))
+          )}
         </aside>
 
-        <div className="messages-chat">
-          <header className="messages-chat__header">
-            {toUser ? (
-              <span className="messages-chat__avatar-letter">
-                {sellerName.charAt(0).toUpperCase()}
-              </span>
-            ) : (
-              <img src={THREAD.avatar} alt="" className="messages-chat__avatar" />
-            )}
-            <div>
-              <div className="messages-chat__seller">{sellerName}</div>
-              <div className="messages-chat__listing">
-                {toUser ? 'New conversation' : `${THREAD.item} — $${THREAD.price}`}
+        <section className="messages-chat" aria-label="Conversation">
+          {participant ? (
+            <>
+              <header className="messages-chat__header">
+                <span className="messages-chat__avatar-letter">
+                  {participant.name.charAt(0).toUpperCase()}
+                </span>
+                <div>
+                  <div className="messages-chat__seller">{participant.name}</div>
+                  <div className="messages-chat__listing">Direct messages</div>
+                </div>
+              </header>
+
+              <div className="messages-chat__body" ref={bodyRef} aria-live="polite">
+                {threadLoading ? (
+                  <p className="messages-chat__empty">Loading conversation…</p>
+                ) : !activeThread ? (
+                  <p className="messages-chat__empty">This conversation is unavailable.</p>
+                ) : activeThread.messages.length === 0 ? (
+                  <p className="messages-chat__empty">
+                    Say hello to start your conversation with {participant.name}.
+                  </p>
+                ) : (
+                  activeThread.messages.map((message: ChatMessage) => (
+                    <div
+                      key={message.id}
+                      className={`msg${message.senderId === user?.id ? ' msg--out' : ' msg--in'}`}
+                    >
+                      <p>{message.text}</p>
+                      <div className="msg__meta">
+                        <time dateTime={message.sentAt}>{formatTime(message.sentAt)}</time>
+                        {message.senderId === user?.id && (
+                          <button
+                            type="button"
+                            className="msg__delete"
+                            aria-label="Delete sent message"
+                            title="Delete message"
+                            disabled={deletingIds.has(message.id)}
+                            onClick={() => void deleteMessage(message)}
+                          >
+                            <TrashIcon />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
-            </div>
-          </header>
 
-          <div className="messages-chat__body">
-            <div className="msg msg--out">
-              <p>Hi! Is the desk chair still available?</p>
-              <time>1:40 PM</time>
-            </div>
-            <div className="msg msg--in">
-              <p>Yes it is! Happy to answer any questions.</p>
-              <time>1:42 PM</time>
-            </div>
+              {error && <p className="messages-error" role="alert">{error}</p>}
 
-            <div className="deal-card">
-              <p className="deal-card__prompt">
-                Confirm deal at <strong>${THREAD.price}</strong> — how will you pay?
-              </p>
-              <div className="deal-card__options">
-                <PaymentOption
-                  id="cash"
-                  label="Cash on Pickup"
-                  selected={payment}
-                  onSelect={setPayment}
-                  icon={<IconCash />}
+              <section className="messages-payment" aria-label="Payment methods">
+                <p className="messages-payment__title">Quick message: choose a payment method</p>
+                <div className="messages-payment__options">
+                  {PAYMENT_METHODS.map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      className="pay-option"
+                      disabled={sending || threadLoading}
+                      onClick={() => void sendMessage(`I can pay by ${method}.`)}
+                    >
+                      {method}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <form className="messages-compose" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  placeholder="Type a message…"
+                  value={draft}
+                  maxLength={4000}
+                  aria-label="Message"
+                  onChange={(event) => setDraft(event.target.value)}
                 />
-                <PaymentOption
-                  id="bank"
-                  label="Bank Transfer"
-                  selected={payment}
-                  onSelect={setPayment}
-                  icon={<IconBank />}
-                />
-                <PaymentOption
-                  id="qr"
-                  label="QR Payment"
-                  selected={payment}
-                  onSelect={setPayment}
-                  icon={<IconQr />}
-                />
-                <PaymentOption
-                  id="online"
-                  label="Online Payment"
-                  selected={payment}
-                  onSelect={setPayment}
-                  icon={<IconCard />}
-                />
+                <button
+                  type="submit"
+                  className="messages-compose__send"
+                  aria-label="Send message"
+                  disabled={!draft.trim() || sending}
+                >
+                  <IconSend />
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <header className="messages-chat__header">
+                <div>
+                  <div className="messages-chat__seller">Your conversations</div>
+                  <div className="messages-chat__listing">Choose a chat or message a seller from a listing.</div>
+                </div>
+              </header>
+              <div className="messages-chat__body">
+                {error ? (
+                  <p className="messages-error" role="alert">{error}</p>
+                ) : (
+                  <p className="messages-chat__empty">Select a conversation to see your messages.</p>
+                )}
               </div>
-              <button type="button" className="deal-card__confirm">
-                Confirm deal
-              </button>
-            </div>
-          </div>
-
-          <div className="messages-chat__toolbar">
-            <button type="button" className="chip">
-              <IconTag /> Make offer
-            </button>
-            <button type="button" className="chip">
-              <IconCalendar /> Pickup / delivery
-            </button>
-            <button type="button" className="chip chip--accent">
-              <IconCheck /> Confirm deal
-            </button>
-          </div>
-
-          <form
-            className="messages-compose"
-            onSubmit={(e) => {
-              e.preventDefault()
-              setDraft('')
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Type a message…"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-            />
-            <button type="submit" className="messages-compose__send" aria-label="Send">
-              <IconSend />
-            </button>
-          </form>
-        </div>
+            </>
+          )}
+        </section>
       </div>
     </main>
-  )
-}
-
-function PaymentOption({
-  id,
-  label,
-  selected,
-  onSelect,
-  icon,
-}: {
-  id: PaymentMethod
-  label: string
-  selected: PaymentMethod
-  onSelect: (id: PaymentMethod) => void
-  icon: ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      className={`pay-option${selected === id ? ' pay-option--selected' : ''}`}
-      onClick={() => onSelect(id)}
-    >
-      {icon}
-      <span>{label}</span>
-    </button>
-  )
-}
-
-function IconCash() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="2" y="6" width="20" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  )
-}
-
-function IconBank() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M4 10h16M6 10V18M10 10V18M14 10V18M18 10V18M3 18h18M12 4l9 6H3l9-6z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function IconQr() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="4" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="14" y="4" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="4" y="14" width="6" height="6" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M14 14h2v2h-2zM18 14h2v6h-6v-2" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  )
-}
-
-function IconCard() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M3 10h18" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  )
-}
-
-function IconTag() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M20 12l-8 8-4-4V8h4l8 4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconCalendar() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="5" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M8 3v4M16 3v4M4 11h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function IconCheck() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M5 12l4 4 10-10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
   )
 }
 
@@ -228,6 +288,20 @@ function IconSend() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function TrashIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M4 7h16M10 11v6m4-6v6M5 7l1 14h12l1-14M9 7V4h6v3"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }

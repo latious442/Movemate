@@ -22,7 +22,7 @@ authRouter.get("/auth/me", async (req, res, next) => {
       res.status(401).json({ error: "Not signed in." });
       return;
     }
-    res.json({ user: { name: user.name, email: user.email } });
+    res.json({ user: { id: user.id, name: user.name, email: user.email } });
   } catch (error) {
     next(error);
   }
@@ -57,7 +57,7 @@ authRouter.post("/auth/register", async (req, res, next) => {
     const session = await db.createSession(created.user.id);
     res.status(201).json({
       token: session.token,
-      user: { name: created.user.name, email: created.user.email },
+      user: { id: created.user.id, name: created.user.name, email: created.user.email },
     });
   } catch (error) {
     next(error);
@@ -79,7 +79,7 @@ authRouter.post("/auth/login", async (req, res, next) => {
     const session = await db.createSession(user.id);
     res.json({
       token: session.token,
-      user: { name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email },
     });
   } catch (error) {
     next(error);

@@ -14,6 +14,7 @@ import { ProfilePage } from './pages/ProfilePage'
 import { MyListingsPage } from './pages/MyListingsPage'
 import { FavoritesPage } from './pages/FavoritesPage'
 import { useFavorites } from './favorites/useFavorites'
+import { UNIVERSITIES } from './catalog'
 
 function RequireAccount({ children }: { children: ReactNode }) {
   const { user, authReady } = useDemoAuth()
@@ -47,8 +48,7 @@ export default function App() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [university, setUniversity] = useState('Stanford University')
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null)
+  const [university, setUniversity] = useState('')
 
   useEffect(() => {
     api
@@ -59,18 +59,21 @@ export default function App() {
   }, [])
 
   const filteredItems = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase()
+    const terms = searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean)
     return items.filter((item) => {
-      const matchesQuery =
-        !q ||
-        item.name.toLowerCase().includes(q) ||
-        item.category.toLowerCase().includes(q) ||
-        (item.notes?.toLowerCase().includes(q) ?? false)
-      const matchesCategory =
-        !categoryFilter || item.category.toLowerCase() === categoryFilter.toLowerCase()
-      return matchesQuery && matchesCategory
+      const searchableText = [
+        item.name,
+        item.category,
+        item.condition,
+        item.notes,
+        item.university,
+        item.price === 0 ? 'Free Items' : '',
+      ].join(' ').toLowerCase()
+      const matchesQuery = terms.every((term) => searchableText.includes(term))
+      const matchesUniversity = !university || item.university === university
+      return matchesQuery && matchesUniversity
     })
-  }, [items, searchQuery, categoryFilter])
+  }, [items, searchQuery, university])
 
   async function handleCreate(values: NewItemValues) {
     setSubmitting(true)
@@ -108,9 +111,8 @@ export default function App() {
     }
   }
 
-  function goBrowse(options?: { query?: string; category?: string | null }) {
+  function goBrowse(options?: { query?: string }) {
     if (options?.query !== undefined) setSearchQuery(options.query)
-    if (options?.category !== undefined) setCategoryFilter(options.category)
     navigate('/browse')
   }
 
@@ -137,11 +139,11 @@ export default function App() {
                 university={university}
                 onUniversityChange={setUniversity}
                 onFindItems={() => goBrowse()}
-                onBrowse={() => goBrowse({ category: null })}
+                onBrowse={() => goBrowse({ query: '' })}
                 onSell={() => navigate('/sell')}
               />
               <CategoryGrid
-                onSelectCategory={(category) => goBrowse({ category, query: '' })}
+                onSelectCategory={(category) => goBrowse({ query: category })}
               />
             </main>
           }
@@ -150,21 +152,75 @@ export default function App() {
         <Route
           path="/browse"
           element={
-            <main className="page">
+            <main className="page browse-page">
               <header className="page__header">
-                <h1>Browse items</h1>
-                <p className="muted">
-                  {university}
-                  {categoryFilter ? ` · ${categoryFilter}` : ''}
-                  {searchQuery.trim() ? ` · “${searchQuery.trim()}”` : ''}
-                </p>
+                <h1>Browse Items</h1>
+                <p className="muted">Dorm essentials from students near you.</p>
               </header>
 
-              <section className="items">
+              <form
+                className="hero__search browse-search"
+                role="search"
+                onSubmit={(event) => {
+                  event.preventDefault()
+                }}
+              >
+                <label className="hero__search-field">
+                  <span className="sr-only">Search essentials</span>
+                  <SearchIcon />
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search essentials..."
+                  />
+                </label>
+
+                <div className="hero__search-divider" aria-hidden />
+
+                <label className="hero__search-university">
+                  <span className="sr-only">University</span>
+                  <select
+                    value={university}
+                    onChange={(event) => setUniversity(event.target.value)}
+                  >
+                    <option value="">All universities</option>
+                    {UNIVERSITIES.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
+                  <ChevronIcon />
+                </label>
+
+                <button type="submit" className="hero__search-submit">
+                  Find Items
+                </button>
+              </form>
+
+              <section className="items" aria-label="Available dorm essentials">
                 {loading ? (
-                  <p className="muted">Loading…</p>
+                  <div className="browse-loading">
+                    <p className="muted">Loading dorm essentials…</p>
+                  </div>
                 ) : filteredItems.length === 0 ? (
-                  <p className="muted">No items match your search yet. Be the first to sell something.</p>
+                  <div className="browse-empty">
+                    <p className="browse-empty__title">No essentials found</p>
+                    <p className="muted">
+                      No listings match your current filters. Try searching for something else or clearing filters.
+                    </p>
+                    {(searchQuery || university) && (
+                      <button
+                        type="button"
+                        className="browse-empty__clear-btn"
+                        onClick={() => {
+                          setSearchQuery('')
+                          setUniversity('')
+                        }}
+                      >
+                        Clear filters
+                      </button>
+                    )}
+                  </div>
                 ) : (
                   <div className="items__grid">
                     {filteredItems.map((item) => (
@@ -188,7 +244,7 @@ export default function App() {
               </header>
               <ItemForm
                 submitting={submitting}
-                defaultUniversity={university}
+                defaultUniversity={university || UNIVERSITIES[0]}
                 onSubmit={handleCreate}
               />
             </main>
@@ -228,5 +284,22 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
+  )
+}
+
+function SearchIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden className="hero__search-icon">
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.75" />
+      <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ChevronIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="hero__chevron">
+      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }

@@ -1,0 +1,17 @@
+{
+  "name": "spider",
+  "category": "Bedroom",
+  "quantity": 1,
+  "notes": "hhhhhhh",
+  "price": 666,
+  "condition": "New",
+  "university": "PIM",
+  "campusPickup": true,
+  "localDelivery": false,
+  "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792076502/movemate/eeycedqdzpalccuh8ayq.jpg",
+  "photoPublicId": "movemate/eeycedqdzpalccuh8ayq",
+  "ownerId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+  "id": "82d77b4b-bae5-4b80-8f74-fe6415559d7c",
+  "createdAt": "2026-10-15T15:01:43.929Z",
+  "updatedAt": "2026-10-15T15:01:43.929Z"
+}

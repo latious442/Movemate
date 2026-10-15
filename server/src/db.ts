@@ -291,14 +291,23 @@ export class JsonDb {
     });
   }
 
-  getUserBySessionToken(token: string): Promise<Pick<User, "name" | "email"> | undefined> {
+  getUserBySessionToken(
+    token: string,
+  ): Promise<Pick<User, "id" | "name" | "email"> | undefined> {
     return this.run(async () => {
       const db = await this.store.read();
       const session = db.sessions.find((s) => s.token === token);
       if (!session) return undefined;
       const user = db.users.find((u) => u.id === session.userId);
       if (!user) return undefined;
-      return { name: user.name, email: user.email };
+      return { id: user.id, name: user.name, email: user.email };
+    });
+  }
+
+  getUser(id: string): Promise<Pick<User, "id" | "name"> | undefined> {
+    return this.run(async () => {
+      const user = (await this.store.read()).users.find((entry) => entry.id === id);
+      return user ? { id: user.id, name: user.name } : undefined;
     });
   }
 
