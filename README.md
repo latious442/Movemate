@@ -116,10 +116,16 @@ The application data is written to `movemate/db.json` and `movemate/messages.jso
 reduce lost updates; for a small app this is plenty. If you outgrow it, swap the JSON stores
 for a real database — the rest of the app is unaffected.
 
-## Deploy to Vercel
+## Deploy the whole project to Vercel
 
-1. Push the repo to GitHub.
-2. Import it in Vercel (framework preset: **Other** — `vercel.json` handles the build).
+Deploy the repository root as **one Vercel project**. Do not upload `client/` and the API
+separately: the root `package.json` installs both workspaces, `vercel.json` builds the
+frontend, and `api/index.ts` exposes the backend as a serverless function.
+
+1. Push the entire repository to GitHub, including the root `package.json`, `package-lock.json`,
+   `vercel.json`, `api/`, and `client/`.
+2. In Vercel, import that repository and set **Root Directory** to the repository root
+   (`.`). Use the **Other** framework preset; leave the build settings to `vercel.json`.
 3. Add environment variables (Project → Settings → Environment Variables):
 
 ```
@@ -131,8 +137,8 @@ CLOUDINARY_FOLDER=movemate
 CORS_ORIGIN=https://your-app.vercel.app
 ```
 
-4. Deploy. The frontend is served from `client/dist` and `/api/*` is routed to the
-   `api/index.ts` function.
+4. Deploy once. The frontend is built to `client/dist`, while `/api/*` is routed to the
+   `api/index.ts` function in the same deployment.
 
 ## Deploy to Netlify
 
