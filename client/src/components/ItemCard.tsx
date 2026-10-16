@@ -84,11 +84,26 @@ export function ItemCard({ item }: ItemCardProps) {
           </span>
         </div>
 
-        <div className="item-card__meta-row">
-          <span className="item-card__meta-text">
-            {[item.university || 'Campus', item.condition || 'Gently Used'].filter(Boolean).join(' · ')}
+        <div className="item-card__tags">
+          <span className="item-card__tag">{item.university || 'Campus'}</span>
+          <span className="item-card__tag item-card__tag--condition">
+            {item.condition || 'Good'}
           </span>
         </div>
+
+        {item.notes && (
+          <p className="item-card__description" title={item.notes}>
+            {item.notes}
+          </p>
+        )}
+
+        {(item.campusPickup || item.localDelivery) && (
+          <div className="item-card__handoff">
+            {item.campusPickup && <span className="item-card__chip">Campus pickup</span>}
+            {item.localDelivery && <span className="item-card__chip">Local delivery</span>}
+          </div>
+        )}
+
         {item.ownerName && (
           <div className="item-card__seller-row">
             <div className="item-card__seller">
