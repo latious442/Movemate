@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDemoAuth } from '../auth/useDemoAuth'
 import { useFavorites } from '../favorites/useFavorites'
@@ -12,6 +13,20 @@ export function ItemCard({ item }: ItemCardProps) {
   const { user, authReady } = useDemoAuth()
   const { isFavorite, isPending, loading: favoritesLoading, toggleFavorite } = useFavorites()
   const favorite = isFavorite(item.id)
+
+  const [expanded, setExpanded] = useState(false)
+  const [descOverflow, setDescOverflow] = useState(false)
+  const descRef = useRef<HTMLParagraphElement>(null)
+
+  useEffect(() => {
+    if (expanded) return
+    const el = descRef.current
+    if (!el) return
+    const measure = () => setDescOverflow(el.scrollHeight > el.clientHeight + 1)
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [item.notes, expanded])
 
   function handleFavoriteClick(e: React.MouseEvent) {
     e.stopPropagation()
@@ -92,9 +107,53 @@ export function ItemCard({ item }: ItemCardProps) {
         </div>
 
         {item.notes && (
-          <p className="item-card__description" title={item.notes}>
-            {item.notes}
-          </p>
+          <div className="item-card__desc">
+            <p
+              ref={descRef}
+              className={`item-card__description${expanded ? ' item-card__description--expanded' : ''}${descOverflow ? ' item-card__description--tappable' : ''}`}
+              title={item.notes}
+              {...(descOverflow
+                ? {
+                    role: 'button' as const,
+                    tabIndex: 0,
+                    'aria-expanded': expanded,
+                    onClick: () => setExpanded((value) => !value),
+                    onKeyDown: (event: React.KeyboardEvent) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault()
+                        setExpanded((value) => !value)
+                      }
+                    },
+                  }
+                : {})}
+            >
+              {item.notes}
+            </p>
+            {descOverflow && (
+              <button
+                type="button"
+                className="item-card__desc-toggle"
+                aria-expanded={expanded}
+                onClick={() => setExpanded((value) => !value)}
+              >
+                {expanded ? 'Show less' : 'Read more'}
+                <svg
+                  className={`item-card__desc-chevron${expanded ? ' item-card__desc-chevron--up' : ''}`}
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+            )}
+          </div>
         )}
 
         {(item.campusPickup || item.localDelivery) && (

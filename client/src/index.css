@@ -773,12 +773,19 @@ textarea:focus {
 
 .items__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
 }
 
+@media (max-width: 560px) {
+  .items__grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+}
+
 .browse-page {
-  max-width: 1100px;
+  max-width: 1200px;
 }
 
 .browse-search {
@@ -1002,6 +1009,13 @@ textarea:focus {
   color: var(--accent);
 }
 
+.item-card__desc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
 .item-card__description {
   display: -webkit-box;
   margin: 0;
@@ -1011,6 +1025,42 @@ textarea:focus {
   line-height: 1.45;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.item-card__description--tappable {
+  cursor: pointer;
+}
+
+.item-card__description--expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.item-card__desc-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.item-card__desc-toggle:hover {
+  text-decoration: underline;
+}
+
+.item-card__desc-chevron {
+  transition: transform 0.15s;
+}
+
+.item-card__desc-chevron--up {
+  transform: rotate(180deg);
 }
 
 .item-card__handoff {
