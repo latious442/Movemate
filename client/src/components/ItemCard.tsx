@@ -80,7 +80,7 @@ export function ItemCard({ item }: ItemCardProps) {
         <div className="item-card__header-row">
           <h3 className="item-card__title" title={item.name}>{item.name}</h3>
           <span className="item-card__price">
-            {item.price > 0 ? `$${item.price}` : 'Free'}
+            {item.price > 0 ? `฿${item.price}` : 'Free'}
           </span>
         </div>
 

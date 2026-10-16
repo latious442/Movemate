@@ -223,7 +223,7 @@ export function ItemForm({
 
       <div className="sell-form__grid">
         <label className="sell-form__field">
-          Price ($)
+          Price (฿)
           <input
             type="number"
             min={0}
