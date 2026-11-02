@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useDemoAuth } from '../auth/useDemoAuth'
+import logoUrl from '../../logo.jpeg'
 
 const links: { to: string; label: string; end?: boolean }[] = [
   { to: '/', label: 'Home', end: true },
@@ -19,7 +20,7 @@ export function Header() {
   return (
     <header className="site-header">
       <Link to="/" className="site-header__logo" onClick={() => setMenuOpen(false)}>
-        MOVEMATE
+        <img src={logoUrl} alt="MoveMate" />
       </Link>
 
       <nav

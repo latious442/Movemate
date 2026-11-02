@@ -1,23 +1,6 @@
 {
   "items": [
     {
-      "name": "xorizo",
-      "category": "Furniture",
-      "quantity": 1,
-      "notes": "",
-      "price": 25,
-      "condition": "New",
-      "university": "Rangsit University",
-      "campusPickup": true,
-      "localDelivery": false,
-      "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792061131/movemate/i60pr6dci7dqfunzpqu0.jpg",
-      "photoPublicId": "movemate/i60pr6dci7dqfunzpqu0",
-      "ownerId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
-      "id": "f8fadc73-360c-4eb1-ad3f-d8522dd3d614",
-      "createdAt": "2026-10-15T10:45:32.763Z",
-      "updatedAt": "2026-10-15T10:45:32.763Z"
-    },
-    {
       "name": "fav book",
       "category": "Furniture",
       "quantity": 1,
@@ -35,21 +18,21 @@
       "updatedAt": "2026-10-15T13:17:21.813Z"
     },
     {
-      "name": "spider",
-      "category": "Bedroom",
+      "name": "gaming chair",
+      "category": "Furniture",
       "quantity": 1,
-      "notes": "hhhhhhh",
-      "price": 666,
-      "condition": "New",
+      "notes": "You boost your focus with this,fr.",
+      "price": 4500,
+      "condition": "Like new",
       "university": "PIM",
       "campusPickup": true,
       "localDelivery": false,
-      "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1792076502/movemate/eeycedqdzpalccuh8ayq.jpg",
-      "photoPublicId": "movemate/eeycedqdzpalccuh8ayq",
-      "ownerId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
-      "id": "82d77b4b-bae5-4b80-8f74-fe6415559d7c",
-      "createdAt": "2026-10-15T15:01:43.929Z",
-      "updatedAt": "2026-10-15T15:01:43.929Z"
+      "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1793553289/movemate/qlz5ljiyp0xgu6owzdwy.jpg",
+      "photoPublicId": "movemate/qlz5ljiyp0xgu6owzdwy",
+      "ownerId": "e1660dd2-a09f-4826-8fdb-ecb8b1c148b1",
+      "id": "a7e6109f-363a-4f8d-87e5-2fb627bc8200",
+      "createdAt": "2026-11-01T17:14:51.991Z",
+      "updatedAt": "2026-11-01T17:14:51.991Z"
     }
   ],
   "users": [
@@ -69,9 +52,7 @@
       "email": "latious@gmail.com",
       "passwordHash": "afbf386173dd90da0f23ac2c73c9ff9a:34ce92799205ea9634cfe84cf00365191d34389c79a1be0aa9380d0c8621ed604f6127cedae2ea7bfdc3fe830823555aca0b168b5a400b0083ca379e522627ee",
       "createdAt": "2026-10-15T10:42:29.380Z",
-      "favoriteItemIds": [
-        "f8fadc73-360c-4eb1-ad3f-d8522dd3d614"
-      ]
+      "favoriteItemIds": []
     },
     {
       "id": "d1a8ac03-4759-48c7-bfc3-f941e2222906",
@@ -79,6 +60,14 @@
       "email": "oak@gmail.com",
       "passwordHash": "e4f9983713f018c2c2ade2f7af1f98ec:f4e1d6a2b81ad826cf6335de2f81a3f0ee2e3768a595e655b6ab8fec64233895cf3e76569848ed7298799c0771a3ee1a5e5c1c2da5dd9f56e79be08ac311113f",
       "createdAt": "2026-10-15T14:16:08.356Z",
+      "favoriteItemIds": []
+    },
+    {
+      "id": "e1660dd2-a09f-4826-8fdb-ecb8b1c148b1",
+      "name": "Myo Myat Aung",
+      "email": "myomyataung@ucsy.edu.mm",
+      "passwordHash": "783eb196278810b460dee96f2e2cc25e:c731d84cc134f46b68d6040cbf0dae5c4b8d320c70a2fb4c6b76e482679847ed69a5b991ef5778dbba15ac7e6fa48c07ce71304200deb110b8e065a7db840207",
+      "createdAt": "2026-11-01T16:57:23.952Z",
       "favoriteItemIds": []
     }
   ],
@@ -97,6 +86,27 @@
       "token": "2fe9cbf9-fb6d-4110-8166-d47d444bb0aa",
       "userId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
       "createdAt": "2026-10-15T15:33:55.721Z"
+    }
+  ],
+  "adminSessions": [
+    {
+      "token": "937e5a91-5591-4455-bf12-4019b426a484",
+      "createdAt": "2026-11-01T17:57:06.446Z"
+    },
+    {
+      "token": "5e970883-bc28-4018-8deb-a04657d78795",
+      "createdAt": "2026-11-02T08:37:19.546Z"
+    }
+  ],
+  "registrationChallenges": [
+    {
+      "name": "Linn Latt Aung",
+      "email": "6742100460@stu.pim.ac.th",
+      "passwordHash": "2b0c5d0759a226cb5d65d0b17fed7cdd:bf586eb16b2fea095e3c4a7e0e7c7a2b965d2fb2b5082c4e2b337dda1bf9408823ff33772bb9492c733969688bf966b4b892a5e7e61e5b3aeb861c123b394642",
+      "codeHash": "9ecedd35b08e3730472f5dc6c1cc3a55:af787711f9dc1e13b29ace54c83185a4c43ec49c639c137c58eac5e30537f2f69840fdb9670783f7ab363edcc8996065efebc2810b043c2a1f20140f16d22ecf",
+      "expiresAt": "2026-11-01T17:52:06.200Z",
+      "attemptsRemaining": 5,
+      "lastSentAt": "2026-11-01T17:42:06.200Z"
     }
   ]
 }

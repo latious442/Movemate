@@ -5,12 +5,40 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
 export type AuthUser = { id: string; name: string; email: string }
 
+export interface AdminStats {
+  posts: number
+  users: number
+  conversations: number
+  messages: number
+}
+
+export type AdminTableRow = Record<string, string | number | boolean | null>
+export interface AdminPost extends Omit<Item, 'ownerName'> {
+  ownerName: string | null
+  ownerEmail: string | null
+}
+
+export interface AdminUser extends AdminTableRow {
+  id: string
+  name: string
+  email: string
+  createdAt: string
+  favoriteCount: number
+}
+
 export interface ChatMessage {
   id: string
   sentAt: string
   text: string
   senderId: string
   receiverId: string
+}
+
+export interface AdminChatMessage extends ChatMessage {
+  senderName: string
+  senderEmail: string | null
+  receiverName: string
+  receiverEmail: string | null
 }
 
 export interface Conversation {
@@ -24,9 +52,23 @@ export interface MessageThread {
   messages: ChatMessage[]
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+export class ApiError extends Error {
+  readonly status: number
+
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
+
+async function request<T>(
+  path: string,
+  init?: RequestInit,
+  authToken: string | null | undefined = undefined,
+): Promise<T> {
   const headers = new Headers(init?.headers)
-  const token = getAuthToken()
+  const token = authToken === undefined ? getAuthToken() : authToken
   if (token && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${token}`)
   }
@@ -41,7 +83,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     } catch {
       // response had no JSON body
     }
-    throw new Error(message || `Request failed with ${response.status}`)
+    throw new ApiError(message || `Request failed with ${response.status}`, response.status)
   }
 
   if (response.status === 204) return undefined as T
@@ -98,7 +140,14 @@ export const api = {
   },
 
   authRegister: (body: { name: string; email: string; password: string }) =>
-    request<{ token: string; user: AuthUser }>('/api/auth/register', {
+    request<{ message: string }>('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }),
+
+  authVerifyRegistration: (body: { email: string; code: string }) =>
+    request<{ token: string; user: AuthUser }>('/api/auth/register/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -117,4 +166,75 @@ export const api = {
     }),
 
   authMe: () => request<{ user: AuthUser }>('/api/auth/me').then((body) => body.user),
+
+  adminLogin: (password: string) =>
+    request<{ token: string }>(
+      '/api/admin/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      },
+      null,
+    ),
+
+  adminStats: (token: string) => request<AdminStats>('/api/admin/stats', undefined, token),
+
+  adminPosts: (token: string) => request<AdminPost[]>('/api/admin/posts', undefined, token),
+
+  adminUsers: (token: string) => request<AdminUser[]>('/api/admin/users', undefined, token),
+
+  adminCreateUser: (
+    token: string,
+    body: { name: string; email: string; password: string },
+  ) =>
+    request<AdminUser>(
+      '/api/admin/users',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      },
+      token,
+    ),
+
+  adminUpdateUser: (
+    token: string,
+    id: string,
+    body: { name: string; email: string; password?: string },
+  ) =>
+    request<AdminUser>(
+      `/api/admin/users/${encodeURIComponent(id)}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      },
+      token,
+    ),
+
+  adminChatMessages: (token: string) =>
+    request<AdminChatMessage[]>('/api/admin/chatmessages', undefined, token),
+
+  adminConversation: (token: string, firstAccountId: string, secondAccountId: string) => {
+    const query = new URLSearchParams({ firstAccountId, secondAccountId })
+    return request<AdminChatMessage[]>(
+      `/api/admin/chatmessages/conversation?${query.toString()}`,
+      undefined,
+      token,
+    )
+  },
+
+  adminDeletePost: (token: string, id: string) =>
+    request<void>(`/api/admin/posts/${encodeURIComponent(id)}`, { method: 'DELETE' }, token),
+
+  adminDeleteChatMessage: (token: string, id: string) =>
+    request<void>(
+      `/api/admin/chatmessages/${encodeURIComponent(id)}`,
+      { method: 'DELETE' },
+      token,
+    ),
+
+  adminLogout: (token: string) =>
+    request<void>('/api/admin/logout', { method: 'POST' }, token),
 }

@@ -6,9 +6,11 @@ import type { Item } from '../types'
 
 interface ItemCardProps {
   item: Item
+  onAdminDelete?: (id: string) => void
+  adminDeletePending?: boolean
 }
 
-export function ItemCard({ item }: ItemCardProps) {
+export function ItemCard({ item, onAdminDelete, adminDeletePending = false }: ItemCardProps) {
   const navigate = useNavigate()
   const { user, authReady } = useDemoAuth()
   const { isFavorite, isPending, loading: favoritesLoading, toggleFavorite } = useFavorites()
@@ -77,18 +79,20 @@ export function ItemCard({ item }: ItemCardProps) {
           {statusLabel}
         </span>
 
-        <button
-          type="button"
-          className={`item-card__favorite${favorite ? ' item-card__favorite--active' : ''}`}
-          aria-label={`${favorite ? 'Remove' : 'Add'} ${item.name} ${favorite ? 'from' : 'to'} favorites`}
-          aria-pressed={favorite}
-          disabled={!authReady || favoritesLoading || isPending(item.id)}
-          onClick={handleFavoriteClick}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill={favorite ? '#e11d48' : 'none'} stroke={favorite ? '#e11d48' : 'currentColor'} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-          </svg>
-        </button>
+        {!onAdminDelete && (
+          <button
+            type="button"
+            className={`item-card__favorite${favorite ? ' item-card__favorite--active' : ''}`}
+            aria-label={`${favorite ? 'Remove' : 'Add'} ${item.name} ${favorite ? 'from' : 'to'} favorites`}
+            aria-pressed={favorite}
+            disabled={!authReady || favoritesLoading || isPending(item.id)}
+            onClick={handleFavoriteClick}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill={favorite ? '#e11d48' : 'none'} stroke={favorite ? '#e11d48' : 'currentColor'} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+            </svg>
+          </button>
+        )}
       </div>
 
       <div className="item-card__details">
@@ -176,7 +180,7 @@ export function ItemCard({ item }: ItemCardProps) {
                 </span>
               </span>
             </div>
-            {item.ownerId && item.ownerId !== user?.id && (
+            {!onAdminDelete && item.ownerId && item.ownerId !== user?.id && (
               <button
                 type="button"
                 className="item-card__msg-btn"
@@ -189,6 +193,19 @@ export function ItemCard({ item }: ItemCardProps) {
                 </svg>
               </button>
             )}
+          </div>
+        )}
+
+        {onAdminDelete && (
+          <div className="item-card__admin-actions">
+            <button
+              type="button"
+              className="admin-delete-btn"
+              onClick={() => onAdminDelete(item.id)}
+              disabled={adminDeletePending}
+            >
+              {adminDeletePending ? 'Deleting…' : 'Delete post'}
+            </button>
           </div>
         )}
       </div>

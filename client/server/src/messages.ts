@@ -69,6 +69,36 @@ class MessageStore {
     );
   }
 
+  getAdminCounts(): Promise<{ conversations: number; messages: number }> {
+    return this.run(async () => {
+      const allMessages = (await this.read()).messages;
+      const conversations = new Set(
+        allMessages.map((message) =>
+          JSON.stringify([message.senderId, message.receiverId].sort()),
+        ),
+      );
+      return { conversations: conversations.size, messages: allMessages.length };
+    });
+  }
+
+  listAllForAdmin(): Promise<ChatMessage[]> {
+    return this.run(async () =>
+      (await this.read()).messages.sort((a, b) => b.sentAt.localeCompare(a.sentAt)),
+    );
+  }
+
+  listConversationForAdmin(firstAccountId: string, secondAccountId: string): Promise<ChatMessage[]> {
+    return this.run(async () =>
+      (await this.read()).messages
+        .filter(
+          (message) =>
+            (message.senderId === firstAccountId && message.receiverId === secondAccountId) ||
+            (message.senderId === secondAccountId && message.receiverId === firstAccountId),
+        )
+        .sort((a, b) => b.sentAt.localeCompare(a.sentAt)),
+    );
+  }
+
   create(senderId: string, receiverId: string, text: string): Promise<ChatMessage> {
     return this.run(async () => {
       const data = await this.read();
@@ -91,6 +121,17 @@ class MessageStore {
       const index = data.messages.findIndex(
         (message) => message.id === messageId && message.senderId === senderId,
       );
+      if (index === -1) return false;
+      data.messages.splice(index, 1);
+      await this.write(data);
+      return true;
+    });
+  }
+
+  deleteForAdmin(messageId: string): Promise<boolean> {
+    return this.run(async () => {
+      const data = await this.read();
+      const index = data.messages.findIndex((message) => message.id === messageId);
       if (index === -1) return false;
       data.messages.splice(index, 1);
       await this.write(data);

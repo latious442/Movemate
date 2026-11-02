@@ -9,6 +9,10 @@ export type DemoAuthContextValue = {
     email: string,
     password: string,
   ) => Promise<{ ok: true } | { ok: false; error: string }>
+  verifyRegistration: (
+    email: string,
+    code: string,
+  ) => Promise<{ ok: true } | { ok: false; error: string }>
   login: (
     email: string,
     password: string,

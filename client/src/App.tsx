@@ -13,6 +13,9 @@ import { AuthPage } from './pages/AuthPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { MyListingsPage } from './pages/MyListingsPage'
 import { FavoritesPage } from './pages/FavoritesPage'
+import { AdminLoginPage } from './pages/AdminLoginPage'
+import { AdminDashboardPage } from './pages/AdminDashboardPage'
+import { AdminRecordsPage } from './pages/AdminRecordsPage'
 import { useFavorites } from './favorites/useFavorites'
 import { UNIVERSITIES } from './catalog'
 
@@ -262,6 +265,15 @@ export default function App() {
         />
 
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin/dashboard/posts" element={<AdminRecordsPage kind="posts" />} />
+        <Route path="/admin/dashboard/users" element={<AdminRecordsPage kind="users" />} />
+        <Route
+          path="/admin/dashboard/chatmessages"
+          element={<AdminRecordsPage kind="chatmessages" />}
+        />
         <Route path="/profile" element={<ProfilePage />} />
         <Route
           path="/my-listings"

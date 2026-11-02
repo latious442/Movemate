@@ -27,7 +27,11 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const register = useCallback(async (name: string, email: string, password: string) => {
-    const result = await demoAuth.register(name, email, password)
+    return demoAuth.register(name, email, password)
+  }, [])
+
+  const verifyRegistration = useCallback(async (email: string, code: string) => {
+    const result = await demoAuth.verifyRegistration(email, code)
     if (result.ok) setUser(await demoAuth.loadSession())
     return result
   }, [])
@@ -44,8 +48,8 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, authReady, register, login, logout }),
-    [user, authReady, register, login, logout],
+    () => ({ user, authReady, register, verifyRegistration, login, logout }),
+    [user, authReady, register, verifyRegistration, login, logout],
   )
 
   return <DemoAuthContext.Provider value={value}>{children}</DemoAuthContext.Provider>

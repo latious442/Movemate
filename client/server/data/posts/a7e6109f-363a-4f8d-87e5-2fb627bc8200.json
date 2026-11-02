@@ -1,0 +1,17 @@
+{
+  "name": "gaming chair",
+  "category": "Furniture",
+  "quantity": 1,
+  "notes": "You boost your focus with this,fr.",
+  "price": 4500,
+  "condition": "Like new",
+  "university": "PIM",
+  "campusPickup": true,
+  "localDelivery": false,
+  "photoUrl": "https://res.cloudinary.com/qm0d1wsi/image/upload/v1793553289/movemate/qlz5ljiyp0xgu6owzdwy.jpg",
+  "photoPublicId": "movemate/qlz5ljiyp0xgu6owzdwy",
+  "ownerId": "e1660dd2-a09f-4826-8fdb-ecb8b1c148b1",
+  "id": "a7e6109f-363a-4f8d-87e5-2fb627bc8200",
+  "createdAt": "2026-11-01T17:14:51.991Z",
+  "updatedAt": "2026-11-01T17:14:51.991Z"
+}

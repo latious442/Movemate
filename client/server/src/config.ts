@@ -27,9 +27,20 @@ export const config = {
     apiSecret: process.env.CLOUDINARY_API_SECRET,
     folder: process.env.CLOUDINARY_FOLDER ?? "movemate",
   },
+  emailJs: {
+    serviceId: process.env.EMAILJS_SERVICE_ID,
+    templateId: process.env.EMAILJS_TEMPLATE_ID,
+    publicKey: process.env.EMAILJS_PUBLIC_KEY,
+  },
+  adminPassword: process.env.ADMIN_PASSWORD,
 } as const;
 
 export function isCloudinaryConfigured(): boolean {
   const { cloudName, apiKey, apiSecret } = config.cloudinary;
   return Boolean(cloudName && apiKey && apiSecret);
+}
+
+export function isEmailJsConfigured(): boolean {
+  const { serviceId, templateId, publicKey } = config.emailJs;
+  return Boolean(serviceId && templateId && publicKey);
 }

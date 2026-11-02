@@ -19,5 +19,8 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.6"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^5.0.3"
   }
 }

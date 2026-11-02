@@ -63,6 +63,43 @@ CLOUDINARY_API_KEY=1234567890
 CLOUDINARY_API_SECRET=xxxxxxxx
 ```
 
+### Set up registration email codes
+
+1. Create an EmailJS email service and a template with `to_email` as the recipient,
+   `user_name` as the name, and `otp_code` as the verification code.
+2. Add the EmailJS service ID, template ID, and public key to
+   `client/server/.env` (or your deployment's server environment variables):
+
+```env
+EMAILJS_SERVICE_ID=your-service-id
+EMAILJS_TEMPLATE_ID=your-template-id
+EMAILJS_PUBLIC_KEY=your-public-key
+```
+
+Registration sends a six-digit code that expires after 10 minutes. A user must verify it
+before the account and session are created. The server stores only hashes of the code and
+password while registration is pending. Local development uses the same server-side setup;
+without the EmailJS variables, registration reports that email verification is not configured.
+
+### Set up admin dashboard access
+
+Set a private admin password in `client/server/.env` or your deployment's server environment:
+
+```env
+ADMIN_PASSWORD=choose-a-strong-password
+```
+
+Open `/admin/login` to sign in. The dashboard at `/admin/dashboard` shows post, user,
+conversation, and message totals. Admin sessions are stored server-side and revoked when
+you sign out, and expire after 30 days. The dashboard links to `/admin/dashboard/posts`, `/admin/dashboard/users`, and
+`/admin/dashboard/chatmessages` for complete listing, account, and chat-message records. These
+pages contain private account and message data; restrict admin credentials to authorized staff.
+Admins can create and edit user profiles using approved university email addresses, set an
+initial password for new users, and optionally reset passwords while editing. Admins can also
+delete posts and individual chat messages. The chat page requires selecting two accounts before
+loading their full conversation in either direction, sorted newest first. Never put the admin
+password in client-side environment variables or commit it.
+
 ## Using it
 
 Open http://localhost:5173 and add an item (name, category, quantity, notes, photo).
@@ -158,4 +195,6 @@ The same code works on Netlify via `netlify/functions/api.ts` (powered by `serve
 | `DATA_FILE`              | client/server  | Optional path relative to `client/server/`       |
 | `CORS_ORIGIN`            | server         | Default `*`; set to your frontend URL in prod    |
 | `CLOUDINARY_*`           | server         | Cloudinary cloud name / key / secret / folder    |
-| `MAX_UPLOAD_BYTES`       | server         | Upload size limit (default 8 MB)                 |
+| `EMAILJS_*`            | server         | EmailJS service ID, template ID, and public key   |
+| `ADMIN_PASSWORD`         | server         | Private password protecting the admin dashboard   |
+| `MAX_UPLOAD_BYTES`     | server         | Upload size limit (default 8 MB)                 |
