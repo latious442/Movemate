@@ -187,6 +187,27 @@ authRouter.patch("/admin/users/:id", async (req, res, next) => {
   }
 });
 
+authRouter.delete("/admin/users/:id", async (req, res, next) => {
+  try {
+    const removed = await db.deleteAdminUser(req.params.id);
+    if (!removed) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
+
+    await messages.deleteForUser(req.params.id);
+    await Promise.all(
+      removed.items
+        .map((item) => item.photoPublicId)
+        .filter((publicId): publicId is string => Boolean(publicId))
+        .map((publicId) => destroyImage(publicId)),
+    );
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
 authRouter.get("/admin/chatmessages", async (_req, res, next) => {
   try {
     const [users, allMessages] = await Promise.all([

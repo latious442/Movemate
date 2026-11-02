@@ -213,6 +213,9 @@ export const api = {
       token,
     ),
 
+  adminDeleteUser: (token: string, id: string) =>
+    request<void>(`/api/admin/users/${encodeURIComponent(id)}`, { method: 'DELETE' }, token),
+
   adminChatMessages: (token: string) =>
     request<AdminChatMessage[]>('/api/admin/chatmessages', undefined, token),
 

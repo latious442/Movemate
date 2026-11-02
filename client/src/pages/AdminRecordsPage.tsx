@@ -227,8 +227,12 @@ export function AdminRecordsPage({ kind }: { kind: AdminRecordKind }) {
 
   async function handleDelete(id: string) {
     const isPost = kind === 'posts'
-    const label = isPost ? 'post' : 'chat message'
-    if (!window.confirm(`Permanently delete this ${label}? This cannot be undone.`)) return
+    const isUser = kind === 'users'
+    const label = isPost ? 'post' : isUser ? 'user account' : 'chat message'
+    const confirmation = isUser
+      ? 'Permanently delete this user account and their listings and messages? This cannot be undone.'
+      : `Permanently delete this ${label}? This cannot be undone.`
+    if (!window.confirm(confirmation)) return
 
     setDeletingId(id)
     setDeleteError(null)
@@ -236,6 +240,10 @@ export function AdminRecordsPage({ kind }: { kind: AdminRecordKind }) {
       if (isPost) {
         await api.adminDeletePost(token, id)
         setPosts((current) => current.filter((post) => post.id !== id))
+      } else if (isUser) {
+        await api.adminDeleteUser(token, id)
+        setUsers((current) => current.filter((user) => user.id !== id))
+        if (editingUserId === id) closeUserForm()
       } else if (kind === 'chatmessages') {
         await api.adminDeleteChatMessage(token, id)
         setTimelineMessages((current) => current.filter((message) => message.id !== id))
@@ -584,6 +592,14 @@ export function AdminRecordsPage({ kind }: { kind: AdminRecordKind }) {
                 onClick={() => openEditUserForm(user)}
               >
                 Edit profile
+              </button>
+              <button
+                type="button"
+                className="admin-delete-btn admin-user-card__delete"
+                disabled={deletingId !== null}
+                onClick={() => void handleDelete(user.id)}
+              >
+                {deletingId === user.id ? 'Deleting…' : 'Delete user'}
               </button>
             </article>
           ))}

@@ -282,6 +282,31 @@ export class JsonDb {
     });
   }
 
+  deleteAdminUser(id: string): Promise<{ items: Item[] } | undefined> {
+    return this.run(async () => {
+      const db = await this.store.read();
+      const userIndex = db.users.findIndex((entry) => entry.id === id);
+      if (userIndex === -1) return undefined;
+
+      const [user] = db.users.splice(userIndex, 1);
+      const removedItems = db.items.filter((item) => item.ownerId === id);
+      const removedItemIds = new Set(removedItems.map((item) => item.id));
+      db.items = db.items.filter((item) => item.ownerId !== id);
+      db.sessions = db.sessions.filter((session) => session.userId !== id);
+      db.registrationChallenges = db.registrationChallenges.filter(
+        (challenge) => challenge.email !== user?.email,
+      );
+      for (const remainingUser of db.users) {
+        remainingUser.favoriteItemIds = remainingUser.favoriteItemIds.filter(
+          (itemId) => !removedItemIds.has(itemId),
+        );
+      }
+
+      await this.store.write(db);
+      return { items: removedItems };
+    });
+  }
+
   enrichItemsWithOwnerName(items: Item[]): Promise<(Item & { ownerName?: string })[]> {
     return this.run(async () => {
       const db = await this.store.read();

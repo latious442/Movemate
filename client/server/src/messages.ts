@@ -138,6 +138,18 @@ class MessageStore {
       return true;
     });
   }
+
+  deleteForUser(userId: string): Promise<void> {
+    return this.run(async () => {
+      const data = await this.read();
+      const remaining = data.messages.filter(
+        (message) => message.senderId !== userId && message.receiverId !== userId,
+      );
+      if (remaining.length === data.messages.length) return;
+      data.messages = remaining;
+      await this.write(data);
+    });
+  }
 }
 
 export const messages = new MessageStore();

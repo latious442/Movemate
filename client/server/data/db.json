@@ -86,6 +86,11 @@
       "token": "2fe9cbf9-fb6d-4110-8166-d47d444bb0aa",
       "userId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
       "createdAt": "2026-10-15T15:33:55.721Z"
+    },
+    {
+      "token": "ebea708f-9cda-491e-8c1c-91afc9f75026",
+      "userId": "a89c702f-63ed-4682-89d1-a4d6f48988b1",
+      "createdAt": "2026-11-02T14:14:30.805Z"
     }
   ],
   "adminSessions": [
